@@ -14,8 +14,26 @@ dovecot-formula
    :scale: 100%
    :target: https://github.com/semantic-release/semantic-release
 
-A SaltStack formula that is empty. It has dummy content to help with a quick
-start on a new formula and it serves as a style guide.
+A salt formula that installs and configures the dovecot IMAP server. It currently supports an Arch, Debian/Ubuntu, Gentoo or
+Red Hat styled layout of the dovecot configuration files in /etc. 
+Config file content (where needed) is stored in pillar (see pillar.example).
+
+Config file to pillar mappings:
+===============================
+
+.. code::
+
+  /etc/dovecot/local.conf in dovecot:config:local
+
+e.g.:
+
+.. code::
+
+  /etc/dovecot/dovecot-ldap.conf.ext in dovecot:config:dovecotext:ldap
+  /etc/dovecot/conf.d/auth-ldap.conf.ext in dovecot:config:confext:ldap
+  /etc/dovecot/conf.d/10-ldap.conf in dovecot:config:conf:10-ldap
+  /etc/dovecot/auth.d/example.tld.passwd in dovecot:config:passwd_files:example.tld
+
 
 .. contents:: **Table of Contents**
    :depth: 1
@@ -62,72 +80,6 @@ Available states
 This installs the dovecot package,
 manages the dovecot configuration file and then
 starts the associated dovecot service.
-
-``dovecot.package``
-^^^^^^^^^^^^^^^^^^^^
-
-This state will install the dovecot package only.
-
-``dovecot.config``
-^^^^^^^^^^^^^^^^^^^
-
-This state will configure the dovecot service and has a dependency on ``dovecot.install``
-via include list.
-
-``dovecot.service``
-^^^^^^^^^^^^^^^^^^^^
-
-This state will start the dovecot service and has a dependency on ``dovecot.config``
-via include list.
-
-``dovecot.clean``
-^^^^^^^^^^^^^^^^^^
-
-*Meta-state (This is a state that includes other states)*.
-
-this state will undo everything performed in the ``dovecot`` meta-state in reverse order, i.e.
-stops the service,
-removes the configuration file and
-then uninstalls the package.
-
-``dovecot.service.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will stop the dovecot service and disable it at boot time.
-
-``dovecot.config.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will remove the configuration of the dovecot service and has a
-dependency on ``dovecot.service.clean`` via include list.
-
-``dovecot.package.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will remove the dovecot package and has a depency on
-``dovecot.config.clean`` via include list.
-
-``dovecot.subcomponent``
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*Meta-state (This is a state that includes other states)*.
-
-This state installs a subcomponent configuration file before
-configuring and starting the dovecot service.
-
-``dovecot.subcomponent.config``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will configure the dovecot subcomponent and has a
-dependency on ``dovecot.config`` via include list.
-
-``dovecot.subcomponent.config.clean``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-This state will remove the configuration of the dovecot subcomponent
-and reload the dovecot service by a dependency on
-``dovecot.service.running`` via include list and ``watch_in``
-requisite.
 
 Testing
 -------
